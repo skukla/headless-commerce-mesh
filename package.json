@@ -30,7 +30,7 @@
     "prepare": "husky"
   },
   "engines": {
-    "node": "^14 || ^16 || ^18"
+    "node": ">=20"
   },
   "lint-staged": {
     "*.js": [
