@@ -5,7 +5,7 @@
 The `filterSchema` transform allows you to **include or exclude specific schema elements** from your mesh, including:[1]
 
 - **Entire types** (e.g., remove `Customer`, `Cart` types)
-- **Specific queries and mutations** (e.g., exclude deprecated operations)  
+- **Specific queries and mutations** (e.g., exclude deprecated operations)
 - **Individual fields** from types
 - **Arguments** from fields
 
@@ -19,12 +19,12 @@ The transform uses an intuitive syntax with exclamation marks (`!`) for exclusio
     {
       "filterSchema": {
         "filters": [
-          "Query.!customer",                              // Remove customer query
-          "Query.!{category, customerOrders}",            // Remove multiple queries
-          "Mutation.!{createCustomer, createEmptyCart}",  // Remove mutations
-          "Type.!{Customer, Cart}",                       // Remove entire types
-          "Customer.{firstname, lastname, email}",        // Keep only specific fields
-          "Query.products.!{pageSize, currentPage}"       // Remove specific arguments
+          "Query.!customer", // Remove customer query
+          "Query.!{category, customerOrders}", // Remove multiple queries
+          "Mutation.!{createCustomer, createEmptyCart}", // Remove mutations
+          "Type.!{Customer, Cart}", // Remove entire types
+          "Customer.{firstname, lastname, email}", // Keep only specific fields
+          "Query.products.!{pageSize, currentPage}" // Remove specific arguments
         ]
       }
     }
@@ -35,19 +35,23 @@ The transform uses an intuitive syntax with exclamation marks (`!`) for exclusio
 ## Benefits for Your Postman Use Case
 
 ### 1. **Clean Schema Views**
+
 API Mesh creates a filtered, unified GraphQL endpoint that you can connect to Postman. Instead of seeing hundreds of operations, you'll only see what you've explicitly allowed.
 
 ### 2. **Multiple Filtering Approaches**
+
 - **Exclusion-based**: Remove specific unwanted elements
 - **Inclusion-based**: Specify only what you want to keep
 - **Wildcard filtering**: Use `Query.*` patterns to apply rules broadly[1]
 
 ### 3. **Conflicts Resolution**
+
 API Mesh can handle schema conflicts between multiple sources using transforms like `prefix` to namespace operations, preventing naming collisions.[2]
 
 ## Implementation Strategy
 
 **Step 1: Set up API Mesh Configuration**
+
 ```json
 {
   "meshConfig": {
@@ -82,8 +86,9 @@ After deploying your mesh, you get a clean GraphQL endpoint that you can use in 
 
 **Step 3: Advanced Filtering**
 You can combine multiple transforms for sophisticated filtering:
+
 - **`filterSchema`**: Remove unwanted elements
-- **`prefix`**: Add namespacing to avoid conflicts  
+- **`prefix`**: Add namespacing to avoid conflicts
 - **`rename`**: Change operation names for clarity[4]
 
 ## Additional Advantages

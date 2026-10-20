@@ -29,7 +29,6 @@ You can extend any existing type in your unified schema by using the GraphQL `ex
 }
 ```
 
-
 ### 2. **Implement Custom Resolvers**
 
 Create a JavaScript file to handle the new field logic:
@@ -45,7 +44,7 @@ module.exports = {
         resolve: (root, args, context, info) => {
           // Custom business logic
           return `Custom data for ${root.name}`;
-        }
+        },
       },
       loyaltyPoints: {
         selectionSet: '{ price { regularPrice { amount { value } } } }',
@@ -53,7 +52,7 @@ module.exports = {
           // Calculate loyalty points based on price
           const price = root.price?.regularPrice?.amount?.value || 0;
           return Math.floor(price * 0.1); // 10% as points
-        }
+        },
       },
       reviews: {
         selectionSet: '{ sku }',
@@ -61,13 +60,12 @@ module.exports = {
           // Fetch from external API
           const response = await fetch(`https://reviews-api.com/products/${root.sku}`);
           return response.json();
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };
 ```
-
 
 ## Advanced Example: Cross-Source Data Integration
 
@@ -114,9 +112,9 @@ module.exports = {
             root,
             args: { sku: root.sku },
             context,
-            info
+            info,
           });
-        }
+        },
       },
       averageRating: {
         selectionSet: '{ sku }',
@@ -125,17 +123,16 @@ module.exports = {
             root,
             args: { sku: root.sku },
             context,
-            info
+            info,
           });
           const total = reviews.reduce((sum, review) => sum + review.rating, 0);
           return reviews.length > 0 ? total / reviews.length : 0;
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };
 ```
-
 
 ## Alternative: Declarative Resolvers
 
@@ -146,7 +143,7 @@ For **simpler field mapping without JavaScript**, use declarative resolvers:
   "meshConfig": {
     "sources": [
       {
-        "name": "Commerce", 
+        "name": "Commerce",
         "handler": { "graphql": { "endpoint": "..." } }
       },
       {
@@ -158,7 +155,7 @@ For **simpler field mapping without JavaScript**, use declarative resolvers:
     "additionalResolvers": [
       {
         "targetTypeName": "Product",
-        "targetFieldName": "stockLevel", 
+        "targetFieldName": "stockLevel",
         "sourceName": "InventoryAPI",
         "sourceTypeName": "Query",
         "sourceFieldName": "getInventory",
@@ -172,7 +169,6 @@ For **simpler field mapping without JavaScript**, use declarative resolvers:
 }
 ```
 
-
 ## Key Configuration Options
 
 ### **Required Fields**:
@@ -180,13 +176,11 @@ For **simpler field mapping without JavaScript**, use declarative resolvers:
 - **`additionalTypeDefs`**: GraphQL schema extensions using `extend type` syntax
 - **`additionalResolvers`**: Path to JavaScript file or array of resolver configurations
 
-
 ### **Resolver Configuration**:[^2]
 
 - **`selectionSet`**: Fields to fetch from the original type
 - **`resolve`**: Custom resolver function with access to `root`, `args`, `context`, `info`
 - **Target/Source mapping**: For declarative resolvers connecting different sources
-
 
 ## Real-World Use Cases
 
@@ -205,10 +199,9 @@ resolve: (root, args, context) => {
 }
 ```
 
-
 ### **2. Inventory Integration**:
 
-```javascript  
+```javascript
 // Add real-time stock data
 extend type Product {
   realTimeStock: StockInfo
@@ -219,7 +212,6 @@ resolve: (root) => {
   return inventoryService.getStock(root.sku);
 }
 ```
-
 
 ### **3. Personalization**:
 
@@ -274,4 +266,3 @@ extend type Product {
 [^19]: https://developer.adobe.com/graphql-mesh-gateway/mesh/basic/handlers/json-schema/
 
 [^20]: https://github.com/ardatan/graphql-mesh/discussions/2863
-

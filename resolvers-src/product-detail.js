@@ -209,8 +209,8 @@ const transformProduct = async (product, commerceVariants = [], context) => {
   // Use extracted utilities for business logic (functions injected by build system)
   const pricing = extractProductPricing(productData, isComplex); // eslint-disable-line no-undef
   const images = transformProductImages(productData.images, productData.name); // eslint-disable-line no-undef
+  // eslint-disable-next-line no-undef
   const semanticImages = extractSemanticImages(
-    // eslint-disable-line no-undef
     productData.media_gallery || productData.images,
     productData.name
   );

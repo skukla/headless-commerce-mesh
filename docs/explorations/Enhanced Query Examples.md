@@ -3,6 +3,7 @@
 This document provides examples of GraphQL queries that leverage the enhanced resolvers in our Adobe API Mesh configuration. These queries provide cleaner, more intuitive access to product data while maintaining full compatibility with the original Catalog Service API.
 
 ## Table of Contents
+
 - [Simple Products Query](#simple-products-query)
 - [Complex Products Query](#complex-products-query)
 - [Filtering Examples](#filtering-examples)
@@ -14,11 +15,7 @@ This query retrieves simple products with enhanced fields for cleaner data acces
 
 ```graphql
 query SimpleProducts {
-  products(
-    phrase: ""
-    limit: 10
-    page: 1
-  ) {
+  products(phrase: "", limit: 10, page: 1) {
     total
     items {
       product {
@@ -35,13 +32,12 @@ query SimpleProducts {
         }
         ... on Catalog_SimpleProductView {
           # Enhanced Fields (via resolvers)
-          manufacturer              # Clean, no cs_ prefix
-          is_on_sale               # Computed boolean
-          display_price            # Direct price access
-          display_currency         # Direct currency access
-          discount_percentage      # Computed discount
-          in_stock                # Boolean status
-          
+          manufacturer # Clean, no cs_ prefix
+          is_on_sale # Computed boolean
+          display_price # Direct price access
+          display_currency # Direct currency access
+          discount_percentage # Computed discount
+          in_stock # Boolean status
           # Original price structure (still available)
           price {
             regular {
@@ -57,13 +53,13 @@ query SimpleProducts {
               }
             }
           }
-          
+
           # Enhanced specifications (cleaned attributes)
           specifications {
-            name    # Cleaned attribute names
-            value   # Attribute values
+            name # Cleaned attribute names
+            value # Attribute values
           }
-          
+
           # Structured category access
           primary_category {
             name
@@ -88,11 +84,7 @@ This query retrieves complex/configurable products with all enhanced fields:
 
 ```graphql
 query ComplexProducts {
-  products(
-    phrase: ""
-    limit: 10
-    page: 1
-  ) {
+  products(phrase: "", limit: 10, page: 1) {
     total
     items {
       product {
@@ -109,18 +101,18 @@ query ComplexProducts {
         }
         ... on Catalog_ComplexProductView {
           # Enhanced Fields (via resolvers)
-          manufacturer              # Clean, no cs_ prefix
-          memory_options           # Array of memory options
-          available_colors {       # Structured color data
+          manufacturer # Clean, no cs_ prefix
+          memory_options # Array of memory options
+          available_colors {
+            # Structured color data
             name
             hex
           }
-          is_on_sale              # Computed boolean
-          display_price           # Direct min price access
-          display_currency        # Direct currency access
-          discount_percentage     # Computed discount
-          in_stock               # Boolean status
-          
+          is_on_sale # Computed boolean
+          display_price # Direct min price access
+          display_currency # Direct currency access
+          discount_percentage # Computed discount
+          in_stock # Boolean status
           # Formatted options for better structure
           formatted_options {
             id
@@ -132,7 +124,7 @@ query ComplexProducts {
               value
             }
           }
-          
+
           # Original price structure (still available)
           priceRange {
             minimum {
@@ -150,19 +142,19 @@ query ComplexProducts {
               }
             }
           }
-          
+
           # Enhanced specifications (cleaned attributes)
           specifications {
-            name    # Cleaned attribute names
-            value   # Attribute values
+            name # Cleaned attribute names
+            value # Attribute values
           }
-          
+
           # Structured category access
           primary_category {
             name
             url_path
           }
-          
+
           # Original categories field (still available)
           categories
         }
@@ -183,13 +175,10 @@ query ComplexProducts {
 The enhanced `products` query supports flexible filtering:
 
 ### Filter by Category
+
 ```graphql
 query ProductsByCategory {
-  products(
-    filter: [{ attribute: "categories", eq: "phones" }]
-    limit: 20
-    page: 1
-  ) {
+  products(filter: [{ attribute: "categories", eq: "phones" }], limit: 20, page: 1) {
     total
     items {
       product {
@@ -204,13 +193,10 @@ query ProductsByCategory {
 ```
 
 ### Search with Phrase
+
 ```graphql
 query SearchProducts {
-  products(
-    phrase: "laptop"
-    limit: 10
-    page: 1
-  ) {
+  products(phrase: "laptop", limit: 10, page: 1) {
     total
     items {
       product {
@@ -225,11 +211,12 @@ query SearchProducts {
 ```
 
 ### Multiple Filters
+
 ```graphql
 query FilteredProducts {
   products(
     filter: [
-      { attribute: "categories", eq: "electronics" },
+      { attribute: "categories", eq: "electronics" }
       { attribute: "manufacturer", eq: "Apple" }
     ]
     limit: 10
@@ -251,21 +238,22 @@ query FilteredProducts {
 
 ### Original vs Enhanced Fields
 
-| Original Field | Enhanced Field | Benefits |
-|---------------|---------------|----------|
-| `attributes[].name` with `cs_manufacturer` | `manufacturer` | Direct access, no prefix |
-| Calculate: `regular.value > final.value` | `is_on_sale` | Pre-computed boolean |
-| Calculate: `(regular - final) / regular * 100` | `discount_percentage` | Pre-computed percentage |
-| `stock_status === 'IN_STOCK'` | `in_stock` | Simple boolean |
-| `priceRange.minimum.final.amount.value` | `display_price` | Direct access |
-| `priceRange.minimum.final.amount.currency` | `display_currency` | Direct access |
-| `custom_attributes` | `specifications` | Cleaned names and structure |
-| `categories[0]` | `primary_category` | Structured with name and url_path |
-| `options` | `formatted_options` | Better structured for UI |
+| Original Field                                 | Enhanced Field        | Benefits                          |
+| ---------------------------------------------- | --------------------- | --------------------------------- |
+| `attributes[].name` with `cs_manufacturer`     | `manufacturer`        | Direct access, no prefix          |
+| Calculate: `regular.value > final.value`       | `is_on_sale`          | Pre-computed boolean              |
+| Calculate: `(regular - final) / regular * 100` | `discount_percentage` | Pre-computed percentage           |
+| `stock_status === 'IN_STOCK'`                  | `in_stock`            | Simple boolean                    |
+| `priceRange.minimum.final.amount.value`        | `display_price`       | Direct access                     |
+| `priceRange.minimum.final.amount.currency`     | `display_currency`    | Direct access                     |
+| `custom_attributes`                            | `specifications`      | Cleaned names and structure       |
+| `categories[0]`                                | `primary_category`    | Structured with name and url_path |
+| `options`                                      | `formatted_options`   | Better structured for UI          |
 
 ### Additional Enhanced Fields
 
 **For Simple Products:**
+
 - `manufacturer` - Manufacturer name without prefix
 - `is_on_sale` - Boolean sale status
 - `display_price` - Direct price value
@@ -276,6 +264,7 @@ query FilteredProducts {
 - `primary_category` - Main category with details
 
 **For Complex Products (includes all simple fields plus):**
+
 - `memory_options` - Array of memory configurations
 - `available_colors` - Array with color names and hex values
 - `formatted_options` - Structured configurable options
