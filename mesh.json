@@ -120,6 +120,7 @@
       "./build/resolvers/cart-operations.js",
       "./build/resolvers/category-breadcrumbs.js",
       "./build/resolvers/category-navigation.js",
+      "./build/resolvers/category-page.js",
       "./build/resolvers/field-extensions.js",
       "./build/resolvers/product-cards.js",
       "./build/resolvers/product-detail.js",
