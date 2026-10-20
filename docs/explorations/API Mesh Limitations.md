@@ -19,7 +19,7 @@ Yes, Adobe API Mesh has several significant limitations in its additional resolv
 module.exports = {
   resolvers: {
     // resolver logic here
-  }
+  },
 };
 ```
 
@@ -43,6 +43,7 @@ module.exports = {
 3. **Leverage the `context.logger`** for debugging instead of `console.log` (which is not supported)[6][4]
 
 **Built-in Capabilities**: API Mesh does provide some built-in functionality:
+
 - **`globalThis.fetch()`** for HTTP requests[2]
 - **`context.logger`** for logging[6]
 - Access to source APIs through the context object[2]
@@ -50,6 +51,7 @@ module.exports = {
 ## Practical Implications
 
 These limitations mean that developers cannot:
+
 - Import utility libraries from npm packages
 - Share common helper functions across multiple resolver files
 - Use advanced Node.js modules for complex operations

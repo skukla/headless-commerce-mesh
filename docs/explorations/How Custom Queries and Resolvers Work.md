@@ -3,6 +3,7 @@
 This document explains how our custom `products` query works with field resolvers to provide enhanced, clean data from the Adobe Commerce Catalog Service.
 
 ## Table of Contents
+
 - [Overview](#overview)
 - [The Architecture](#the-architecture)
 - [How It Works Step-by-Step](#how-it-works-step-by-step)
@@ -49,12 +50,12 @@ The magic is that these work **independently but cooperatively** through GraphQL
 
 ```graphql
 query {
-  products(filter: [{attribute: "categories", eq: "phones"}]) {
+  products(filter: [{ attribute: "categories", eq: "phones" }]) {
     items {
       product {
         name
-        manufacturer    # Custom field!
-        is_on_sale     # Custom field!
+        manufacturer # Custom field!
+        is_on_sale # Custom field!
       }
     }
   }
@@ -75,21 +76,22 @@ Query: {
         args: {
           filter: args.filter,
           page_size: args.limit,
-          current_page: args.page
+          current_page: args.page,
         },
         context,
-        selectionSet: PRODUCT_SEARCH_QUERY  // What fields to fetch
+        selectionSet: PRODUCT_SEARCH_QUERY, // What fields to fetch
       });
 
       // Minimal reshaping - mostly just renaming
       return {
-        items: searchResult.items?.map(item => ({
-          product: item.productView  // ← KEY LINE: Returns native Catalog type!
-        })) || [],
+        items:
+          searchResult.items?.map((item) => ({
+            product: item.productView, // ← KEY LINE: Returns native Catalog type!
+          })) || [],
         total: searchResult.total_count || 0,
-        page_info: searchResult.page_info
+        page_info: searchResult.page_info,
       };
-    }
+    };
   }
 }
 ```
@@ -103,6 +105,7 @@ GraphQL's type system recognizes these types and knows there are field resolvers
 ### Step 4: Field Resolvers Automatically Apply
 
 When the frontend requests `manufacturer`, GraphQL:
+
 1. Sees the field is on a `Catalog_SimpleProductView` type
 2. Finds the corresponding field resolver
 3. Executes it automatically
@@ -124,13 +127,15 @@ Catalog_SimpleProductView: {
 ```json
 {
   "products": {
-    "items": [{
-      "product": {
-        "name": "iPhone 15",
-        "manufacturer": "Apple",     // No cs_ prefix!
-        "is_on_sale": true           // Calculated boolean!
+    "items": [
+      {
+        "product": {
+          "name": "iPhone 15",
+          "manufacturer": "Apple", // No cs_ prefix!
+          "is_on_sale": true // Calculated boolean!
+        }
       }
-    }]
+    ]
   }
 }
 ```
@@ -145,6 +150,7 @@ Catalog_SimpleProductView: {
 4. GraphQL automatically applies field resolvers based on type
 
 This is like a factory assembly line:
+
 - The main factory (`products` resolver) gets raw materials
 - Assembly line stations (field resolvers) automatically activate as products pass through
 - Each station only processes if its specific field was requested
@@ -222,12 +228,15 @@ Catalog_SimpleProductView: {
 ## Common Misconceptions
 
 ### Misconception 1: "selectionSet auto-executes queries"
+
 **Reality:** `selectionSet` in field resolvers only specifies which parent fields to fetch. It doesn't execute queries.
 
 ### Misconception 2: "The products resolver orchestrates field resolvers"
+
 **Reality:** The products resolver just returns data. GraphQL's type system automatically applies field resolvers.
 
 ### Misconception 3: "We need to transform all data in the products resolver"
+
 **Reality:** Minimal transformation is needed. Field resolvers handle the detailed cleaning.
 
 ## Benefits of This Architecture
@@ -251,6 +260,7 @@ Catalog_SimpleProductView: {
 ## Summary
 
 The custom `products` query is a thin wrapper that:
+
 1. Fetches data from the Catalog Service using `context`
 2. Does minimal reshaping (mainly renaming)
 3. Returns native Catalog types

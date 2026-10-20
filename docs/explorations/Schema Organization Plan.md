@@ -1,6 +1,7 @@
 # Schema Organization Plan
 
 ## Problem
+
 Currently, all GraphQL type definitions are stored as a single string in `mesh.json`'s `additionalTypeDefs` field, making them hard to read, maintain, and version control.
 
 ## Solution: Build Process with Separate Schema Files
@@ -8,6 +9,7 @@ Currently, all GraphQL type definitions are stored as a single string in `mesh.j
 Since API Mesh requires a JSON file with additionalTypeDefs as a string, we'll create a build process to compile separate GraphQL files into the required format.
 
 ### Directory Structure
+
 ```
 commerce-mesh/
 ├── schemas/
@@ -23,6 +25,7 @@ commerce-mesh/
 #### 1. Create Schema Files
 
 **schemas/types.graphql** - Custom type definitions:
+
 - `ColorOption`
 - `ProductOption`
 - `OptionValue`
@@ -34,6 +37,7 @@ commerce-mesh/
 - `ProductFilter` (input type)
 
 **schemas/extensions.graphql** - Type extensions:
+
 - Extensions to `Catalog_ComplexProductView`
 - Extensions to `Catalog_SimpleProductView`
 - Extensions to `Query`
@@ -53,7 +57,7 @@ const meshConfig = JSON.parse(fs.readFileSync('./mesh.config.json', 'utf8'));
 
 // Combine schemas into a single string
 const combinedSchema = `${typesSchema}\n${extensionsSchema}`
-  .replace(/\n/g, ' ')  // Convert to single line
+  .replace(/\n/g, ' ') // Convert to single line
   .replace(/\s+/g, ' ') // Normalize whitespace
   .trim();
 
@@ -69,6 +73,7 @@ console.log('✅ mesh.json generated successfully');
 #### 3. Update package.json
 
 Add build script:
+
 ```json
 {
   "scripts": {
@@ -81,6 +86,7 @@ Add build script:
 #### 4. Update .gitignore
 
 Add generated file:
+
 ```
 mesh.json
 ```

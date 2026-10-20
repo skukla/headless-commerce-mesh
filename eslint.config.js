@@ -20,7 +20,7 @@ module.exports = [
       'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'no-console': 'off',
       semi: ['error', 'always'],
-      quotes: ['error', 'single'],
+      quotes: ['error', 'single', { avoidEscape: true }],
     },
   },
   {
@@ -53,6 +53,6 @@ module.exports = [
     },
   },
   {
-    ignores: ['node_modules/**', 'mesh.json', 'build/**'],
+    ignores: ['node_modules/**', 'mesh.json', 'build/**', 'resolvers/**'],
   },
 ];
