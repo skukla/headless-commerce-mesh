@@ -53,6 +53,6 @@ module.exports = [
     },
   },
   {
-    ignores: ['node_modules/**', 'mesh.json', 'build/**', 'resolvers/**'],
+    ignores: ['node_modules/**', 'mesh.json', 'build/**'],
   },
 ];

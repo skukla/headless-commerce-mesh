@@ -9,4 +9,3 @@ yarn.lock
 pnpm-lock.yaml
 mesh.json
 *.graphql
-resolvers
